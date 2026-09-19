@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Nosso Cantinho ❤️</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -10,64 +11,60 @@
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
     }
 
     body {
-      background: #f7eef3;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #ffeef4;
+      color: #333;
+    }
+
+    .screen {
       min-height: 100vh;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      padding: 20px;
     }
 
-    .container {
+    .box {
       width: 100%;
-      max-width: 500px;
-      height: 90vh;
+      max-width: 420px;
       background: white;
       border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 5px 25px rgba(0,0,0,0.15);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .login {
-      padding: 35px 25px;
-      margin: auto;
-      width: 100%;
-      text-align: center;
+      padding: 25px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
     }
 
     h1 {
-      color: #d85b8a;
-      margin-bottom: 10px;
+      text-align: center;
+      color: #e75480;
+      margin-top: 0;
     }
 
     .subtitle {
+      text-align: center;
       color: #777;
-      margin-bottom: 25px;
     }
 
     input {
       width: 100%;
-      padding: 13px;
-      margin: 7px 0;
+      padding: 14px;
+      margin-top: 10px;
       border: 1px solid #ddd;
       border-radius: 10px;
+      font-size: 16px;
       outline: none;
     }
 
     button {
       width: 100%;
-      padding: 13px;
-      margin-top: 10px;
+      padding: 14px;
+      margin-top: 12px;
       border: none;
       border-radius: 10px;
-      background: #d85b8a;
+      background: #e75480;
       color: white;
       font-size: 16px;
       cursor: pointer;
@@ -77,299 +74,507 @@
       opacity: 0.9;
     }
 
-    .chat {
-      display: none;
-      height: 100%;
-      flex-direction: column;
-    }
-
-    .header {
-      background: #d85b8a;
-      color: white;
-      padding: 18px;
+    .error {
+      color: #d33;
       text-align: center;
-      font-size: 20px;
-      font-weight: bold;
+      margin-top: 12px;
     }
 
-    .messages {
-      flex: 1;
+    #chat {
+      display: none;
+      height: 100vh;
+      flex-direction: column;
       padding: 15px;
+    }
+
+    .chat-header {
+      text-align: center;
+      color: #e75480;
+      font-size: 22px;
+      font-weight: bold;
+      padding: 10px;
+    }
+
+    #messages {
+      flex: 1;
       overflow-y: auto;
-      background: #fff8fb;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
     .message {
-      background: #f0d6e1;
-      padding: 10px 13px;
-      border-radius: 15px;
-      margin-bottom: 10px;
       max-width: 80%;
+      padding: 10px 14px;
+      border-radius: 15px;
       word-wrap: break-word;
     }
 
-    .message.mine {
-      margin-left: auto;
-      background: #d85b8a;
+    .mine {
+      align-self: flex-end;
+      background: #e75480;
       color: white;
+      border-bottom-right-radius: 4px;
     }
 
-    .time {
-      font-size: 10px;
-      opacity: 0.7;
-      margin-top: 4px;
-    }
-
-    .send {
-      display: flex;
-      padding: 10px;
-      border-top: 1px solid #eee;
+    .other {
+      align-self: flex-start;
       background: white;
+      color: #333;
+      border-bottom-left-radius: 4px;
     }
 
-    .send input {
-      margin: 0;
+    .send-area {
+      display: flex;
+      gap: 8px;
+      padding: 10px 0;
+    }
+
+    #messageInput {
       flex: 1;
-      margin-right: 8px;
+      margin: 0;
     }
 
-    .send button {
+    #sendButton {
       width: auto;
       margin: 0;
-      padding: 0 18px;
-    }
-
-    .error {
-      color: #c0392b;
-      margin-top: 10px;
-      font-size: 14px;
+      padding: 0 20px;
     }
   </style>
 </head>
 
 <body>
 
-<div class="container">
+  <!-- LOGIN -->
+  <div class="screen" id="login">
+    <div class="box">
 
-  <div class="login" id="login">
-    <h1>Nosso Cantinho ❤️</h1>
-    <p class="subtitle">Um lugar só nosso.</p>
+      <h1>Nosso Cantinho ❤️</h1>
 
-    <input type="email" id="email" placeholder="Seu e-mail">
-    <input type="password" id="password" placeholder="Sua senha">
+      <p class="subtitle">
+        Entre para conversar comigo.
+      </p>
 
-    <button onclick="login()">Entrar</button>
+      <input
+        type="email"
+        id="email"
+        placeholder="Seu e-mail"
+      >
 
-    <div class="error" id="error"></div>
+      <input
+        type="password"
+        id="password"
+        placeholder="Sua senha"
+      >
+
+      <button onclick="login()">
+        Entrar
+      </button>
+
+      <div class="error" id="error"></div>
+
+    </div>
   </div>
 
-  <div class="chat" id="chat">
 
-    <div class="header">
+  <!-- CHAT -->
+  <div id="chat">
+
+    <div class="chat-header">
       Nosso Cantinho ❤️
     </div>
 
-    <div class="messages" id="messages"></div>
+    <div id="messages"></div>
 
-    <div class="send">
+    <div class="send-area">
+
       <input
         type="text"
         id="messageInput"
-        placeholder="Escreva uma mensagem..."
-        onkeydown="if(event.key === 'Enter') sendMessage()"
+        placeholder="Digite uma mensagem..."
       >
 
-      <button onclick="sendMessage()">Enviar</button>
+      <button id="sendButton" onclick="sendMessage()">
+        Enviar
+      </button>
+
     </div>
 
   </div>
 
-</div>
 
-  <div class="login" id="resetPassword" style="display:none;">
-    <h1>Nova senha 🔒</h1>
-    <p class="subtitle">Digite sua nova senha abaixo.</p>
+  <!-- NOVA SENHA -->
+  <div class="screen" id="resetPassword" style="display:none;">
 
-    <input type="password" id="newPassword" placeholder="Nova senha">
+    <div class="box">
 
-    <button onclick="updatePassword()">Redefinir senha</button>
+      <h1>Nova senha 🔒</h1>
 
-    <div class="error" id="resetError"></div>
-  </div>  
-  
-<script>
+      <p class="subtitle">
+        Digite sua nova senha abaixo.
+      </p>
 
-  // COLOQUE AQUI AS INFORMAÇÕES DO SEU PROJETO SUPABASE
-  const SUPABASE_URL = "https://bdkhcowgukgrxwlbcepm.supabase.co;
-  const SUPABASE_KEY = "sb_publishable_QiyxMPTL-kpmkbjgouaskw_jDflGGgI";
+      <input
+        type="password"
+        id="newPassword"
+        placeholder="Nova senha"
+      >
 
-  const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
+      <button onclick="updatePassword()">
+        Redefinir senha
+      </button>
 
-  let currentUser = null;
+      <div class="error" id="resetError"></div>
 
-  supabaseClient.auth.onAuthStateChange((event, session) => {
-  if (event === "PASSWORD_RECOVERY") {
-    document.getElementById("login").style.display = "none";
-    document.getElementById("chat").style.display = "none";
-    document.getElementById("resetPassword").style.display = "block";
-  }
-});
-  
-  async function updatePassword() {
+    </div>
 
-    const newPassword = document.getElementById("newPassword").value;
-    const resetError = document.getElementById("resetError");
+  </div>
 
-    resetError.textContent = "";
 
-    if (newPassword.length < 6) {
-      resetError.textContent = "A senha precisa ter pelo menos 6 caracteres.";
-      return;
-    }
+  <script>
 
-    const { error } = await supabaseClient.auth.updateUser({
-      password: newPassword
+    /* =========================
+       SUPABASE
+    ========================= */
+
+    const SUPABASE_URL = "https://bdkhcowgukgrxwlbcepm.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_QiyxMPTL-kpmkbjgouaskw_jDflGGgI";
+
+
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+
+    let currentUser = null;
+
+
+    /* =========================
+       RECUPERAÇÃO DE SENHA
+    ========================= */
+
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+
+      if (event === "PASSWORD_RECOVERY") {
+
+        document.getElementById("login").style.display = "none";
+
+        document.getElementById("chat").style.display = "none";
+
+        document.getElementById("resetPassword").style.display = "flex";
+
+      }
+
     });
 
-    if (error) {
-      resetError.textContent = "Não foi possível alterar a senha.";
-      return;
+
+    async function updatePassword() {
+
+      const newPassword =
+        document.getElementById("newPassword").value;
+
+      const resetError =
+        document.getElementById("resetError");
+
+      resetError.textContent = "";
+
+
+      if (newPassword.length < 6) {
+
+        resetError.textContent =
+          "A senha precisa ter pelo menos 6 caracteres.";
+
+        return;
+
+      }
+
+
+      const { error } =
+        await supabaseClient.auth.updateUser({
+
+          password: newPassword
+
+        });
+
+
+      if (error) {
+
+        resetError.textContent =
+          error.message;
+
+        return;
+
+      }
+
+
+      resetError.style.color = "green";
+
+      resetError.textContent =
+        "Senha alterada com sucesso!";
+
     }
 
-    resetError.style.color = "green";
-    resetError.textContent = "Senha alterada com sucesso!";
 
-  }
-  
-  async function login() {
+    /* =========================
+       LOGIN
+    ========================= */
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const error = document.getElementById("error");
+    async function login() {
 
-    error.textContent = "";
+      const email =
+        document.getElementById("email").value.trim();
 
-    const { data, error: loginError } =
-      await supabaseClient.auth.signInWithPassword({
-        email: email,
-        password: password
+      const password =
+        document.getElementById("password").value;
+
+      const error =
+        document.getElementById("error");
+
+
+      error.textContent = "";
+
+
+      if (!email || !password) {
+
+        error.textContent =
+          "Digite seu e-mail e sua senha.";
+
+        return;
+
+      }
+
+
+      const { data, error: loginError } =
+        await supabaseClient.auth.signInWithPassword({
+
+          email: email,
+
+          password: password
+
+        });
+
+
+      if (loginError) {
+
+        error.textContent =
+          loginError.message;
+
+        return;
+
+      }
+
+
+      currentUser = data.user;
+
+
+      document.getElementById("login").style.display =
+        "none";
+
+
+      document.getElementById("chat").style.display =
+        "flex";
+
+
+      loadMessages();
+
+      subscribeToMessages();
+
+    }
+
+
+    /* =========================
+       CARREGAR MENSAGENS
+    ========================= */
+
+    async function loadMessages() {
+
+      const { data, error } =
+        await supabaseClient
+          .from("messages")
+          .select("*")
+          .order("created_at", {
+            ascending: true
+          });
+
+
+      if (error) {
+
+        console.log(error);
+
+        return;
+
+      }
+
+
+      const messages =
+        document.getElementById("messages");
+
+
+      messages.innerHTML = "";
+
+
+      data.forEach(message => {
+
+        showMessage(message);
+
       });
 
-    if (loginError) {
-      error.textContent = loginError.message;
-      return;
     }
 
-    currentUser = data.user;
 
-    document.getElementById("login").style.display = "none";
-    document.getElementById("chat").style.display = "flex";
+    /* =========================
+       MOSTRAR MENSAGEM
+    ========================= */
 
-    loadMessages();
-    subscribeToMessages();
-  }
+    function showMessage(message) {
 
-  async function loadMessages() {
+      const messages =
+        document.getElementById("messages");
 
-    const { data, error } = await supabaseClient
-      .from("messages")
-      .select("*")
-      .order("created_at", { ascending: true });
 
-    if (error) {
-      console.log(error);
-      return;
+      const div =
+        document.createElement("div");
+
+
+      div.classList.add("message");
+
+
+      if (
+        currentUser &&
+        message.user_id === currentUser.id
+      ) {
+
+        div.classList.add("mine");
+
+      } else {
+
+        div.classList.add("other");
+
+      }
+
+
+      div.textContent = message.content;
+
+
+      messages.appendChild(div);
+
+
+      messages.scrollTop =
+        messages.scrollHeight;
+
     }
 
-    const messages = document.getElementById("messages");
-    messages.innerHTML = "";
 
-    data.forEach(message => {
-      showMessage(message);
-    });
-  }
+    /* =========================
+       ENVIAR MENSAGEM
+    ========================= */
 
-  function showMessage(message) {
+    async function sendMessage() {
 
-    const messages = document.getElementById("messages");
+      const input =
+        document.getElementById("messageInput");
 
-    const div = document.createElement("div");
 
-    div.className =
-      "message " +
-      (message.user_id === currentUser.id ? "mine" : "");
+      const content =
+        input.value.trim();
 
-    const text = document.createElement("div");
-    text.textContent = message.content;
 
-    const time = document.createElement("div");
-    time.className = "time";
+      if (!content) return;
 
-    time.textContent =
-      new Date(message.created_at).toLocaleTimeString(
-        "pt-BR",
-        {
-          hour: "2-digit",
-          minute: "2-digit"
+
+      if (!currentUser) {
+
+        alert("Você não está conectado.");
+
+        return;
+
+      }
+
+
+      const { error } =
+        await supabaseClient
+          .from("messages")
+          .insert({
+
+            user_id: currentUser.id,
+
+            content: content
+
+          });
+
+
+      if (error) {
+
+        alert(error.message);
+
+        console.log(error);
+
+        return;
+
+      }
+
+
+      input.value = "";
+
+    }
+
+
+    /* =========================
+       ENTER PARA ENVIAR
+    ========================= */
+
+    document
+      .getElementById("messageInput")
+      .addEventListener("keydown", function(event) {
+
+        if (event.key === "Enter") {
+
+          sendMessage();
+
         }
-      );
 
-    div.appendChild(text);
-    div.appendChild(time);
-
-    messages.appendChild(div);
-
-    messages.scrollTop = messages.scrollHeight;
-  }
-
-  async function sendMessage() {
-
-    const input = document.getElementById("messageInput");
-    const content = input.value.trim();
-
-    if (!content) return;
-
-    const { error } = await supabaseClient
-      .from("messages")
-      .insert({
-        user_id: currentUser.id,
-        content: content
       });
 
-    if (error) {
-  alert(error.message);
-  return;
-    }
 
-    input.value = "";
-  }
+    /* =========================
+       MENSAGENS EM TEMPO REAL
+    ========================= */
 
-  function subscribeToMessages() {
+    function subscribeToMessages() {
 
-    supabaseClient
-      .channel("messages-channel")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "messages"
-        },
-        payload => {
+      supabaseClient
 
-          if (payload.new.user_id !== currentUser.id) {
+        .channel("messages-channel")
+
+        .on(
+
+          "postgres_changes",
+
+          {
+
+            event: "INSERT",
+
+            schema: "public",
+
+            table: "messages"
+
+          },
+
+          payload => {
+
             showMessage(payload.new);
+
           }
 
-        }
-      )
-      .subscribe();
-  }
+        )
 
-</script>
+        .subscribe();
+
+    }
+
+  </script>
 
 </body>
 </html>
