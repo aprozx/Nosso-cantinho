@@ -210,6 +210,32 @@
 
   let currentUser = null;
 
+  async function updatePassword() {
+
+    const newPassword = document.getElementById("newPassword").value;
+    const resetError = document.getElementById("resetError");
+
+    resetError.textContent = "";
+
+    if (newPassword.length < 6) {
+      resetError.textContent = "A senha precisa ter pelo menos 6 caracteres.";
+      return;
+    }
+
+    const { error } = await supabaseClient.auth.updateUser({
+      password: newPassword
+    });
+
+    if (error) {
+      resetError.textContent = "Não foi possível alterar a senha.";
+      return;
+    }
+
+    resetError.style.color = "green";
+    resetError.textContent = "Senha alterada com sucesso!";
+
+  }
+  
   async function login() {
 
     const email = document.getElementById("email").value;
