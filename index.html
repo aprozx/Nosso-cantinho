@@ -249,7 +249,7 @@
 
 
     let currentUser = null;
-
+let messagesChannel = null;
 
     /* =========================
        RECUPERAÇÃO DE SENHA
@@ -543,36 +543,27 @@ input.value = "";
     ========================= */
 
     function subscribeToMessages() {
+function subscribeToMessages() {
 
-      supabaseClient
+  if (messagesChannel) {
+    supabaseClient.removeChannel(messagesChannel);
+  }
 
-        .channel("messages-channel")
-
-        .on(
-
-          "postgres_changes",
-
-          {
-
-            event: "INSERT",
-
-            schema: "public",
-
-            table: "messages"
-
-          },
-
-          payload => {
-
-            showMessage(payload.new);
-
-          }
-
-        )
-
-        .subscribe();
-
-    }
+  messagesChannel = supabaseClient
+    .channel("messages-channel")
+    .on(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "messages"
+      },
+      payload => {
+        showMessage(payload.new);
+      }
+    )
+    .subscribe();
+}
 
   </script>
 
