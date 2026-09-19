@@ -153,7 +153,7 @@
       <h1>Nosso Cantinho ❤️</h1>
 
       <p class="subtitle">
-        Entre para conversar comigo.
+        Nosso cantinho especial.
       </p>
 
       <input
@@ -507,16 +507,20 @@
 
       if (error) {
 
-        alert(error.message);
+  alert(error.message);
 
-        console.log(error);
+  console.log(error);
 
-        return;
+  return;
 
-      }
+}
 
+showMessage({
+  user_id: currentUser.id,
+  content: content
+});
 
-      input.value = "";
+input.value = "";
 
     }
 
