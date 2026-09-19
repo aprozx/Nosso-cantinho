@@ -259,7 +259,7 @@
       });
 
     if (loginError) {
-      error.textContent = "E-mail ou senha incorretos.";
+      error.textContent = loginError.message;
       return;
     }
 
