@@ -210,6 +210,14 @@
 
   let currentUser = null;
 
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+  if (event === "PASSWORD_RECOVERY") {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("chat").style.display = "none";
+    document.getElementById("resetPassword").style.display = "block";
+  }
+});
+  
   async function updatePassword() {
 
     const newPassword = document.getElementById("newPassword").value;
