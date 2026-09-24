@@ -238,25 +238,6 @@
 
 
     /* =========================
-       PEDIR PERMISSÃO
-    ========================= */
-
-    async function requestNotificationPermission() {
-
-      if (!("Notification" in window)) {
-        return;
-      }
-
-      if (Notification.permission === "default") {
-
-        await Notification.requestPermission();
-
-      }
-
-    }
-
-
-    /* =========================
        LOGIN
     ========================= */
 
@@ -325,8 +306,6 @@
           .getElementById("chat")
           .style.display = "flex";
 
-
-        await requestNotificationPermission();
 
         await loadMessages();
 
@@ -424,41 +403,6 @@
 
       messages.scrollTop =
         messages.scrollHeight;
-
-    }
-
-
-    /* =========================
-       NOTIFICAÇÃO
-    ========================= */
-
-    function showNotification(message) {
-
-      if (!("Notification" in window)) {
-        return;
-      }
-
-
-      if (Notification.permission !== "granted") {
-        return;
-      }
-
-
-      if (
-        currentUser &&
-        message.user_id === currentUser.id
-      ) {
-        return;
-      }
-
-
-      new Notification("Nosso Cantinho ❤️", {
-
-        body: message.content,
-
-        icon: "https://cdn-icons-png.flaticon.com/512/833/833472.png"
-
-      });
 
     }
 
@@ -573,11 +517,6 @@
                 payload.new
               );
 
-
-              showNotification(
-                payload.new
-              );
-
             }
 
           )
@@ -586,14 +525,7 @@
 
     }
 
+  </script>
 
-    /* =========================
-       QUANDO VOLTAR PARA O SITE
-    ========================= */
-
-    document.addEventListener(
-      "visibilitychange",
-      async function() {
-
-        if (
-          document.visibilityState === "
+</body>
+</html>
