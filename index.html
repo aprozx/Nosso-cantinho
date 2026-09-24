@@ -525,6 +525,39 @@
 
     }
 
+
+    /* =========================
+       RECONECTAR AO VOLTAR
+    ========================= */
+
+    document.addEventListener(
+      "visibilitychange",
+      async function() {
+
+        if (
+          document.visibilityState === "visible" &&
+          currentUser
+        ) {
+
+          /*
+            O celular pode ter suspendido
+            o Realtime enquanto a aba estava
+            em segundo plano.
+
+            Ao voltar, buscamos novamente
+            todas as mensagens e recriamos
+            a conexão em tempo real.
+          */
+
+          await loadMessages();
+
+          subscribeToMessages();
+
+        }
+
+      }
+    );
+
   </script>
 
 </body>
